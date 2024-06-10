@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +35,8 @@ public class Player implements UserDetails {
   String username;
   String password;
   String email;
+  @ManyToMany
+  private List<Role> roles;
 
   /**
    * Returns the authorities granted to the user. Cannot return <code>null</code>.
@@ -90,5 +93,9 @@ public class Player implements UserDetails {
   public boolean isEnabled() {
 //    return UserDetails.super.isEnabled();
     return true;
+  }
+
+  public void setRoles(List<Role> roles) {
+    this.roles = roles;
   }
 }

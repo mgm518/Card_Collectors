@@ -1,10 +1,21 @@
 package org.markmcguire.cardcollectors.services;
 
+import java.util.Collections;
+import org.markmcguire.cardcollectors.models.Player;
+import org.markmcguire.cardcollectors.repositories.PlayerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class CustomUserDetailsService implements UserDetailsService {
+
+  @Autowired
+  private PlayerRepository playerRepository;
 
   /**
    * Locates the user based on the username. In the actual implementation, the search may possibly
@@ -18,7 +29,16 @@ public class CustomUserDetailsService implements UserDetailsService {
    *                                   GrantedAuthority
    */
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    return null;
+  @Transactional
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    Player user = playerRepository.findByEmail(email);
+    if (user == null) {
+      throw new UsernameNotFoundException("User not found with email: " + email);
+    }
+    return new org.springframework.security.core.userdetails.User(
+        user.getEmail(),
+        user.getPassword(),
+        Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+    );
   }
 }

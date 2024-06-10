@@ -12,10 +12,10 @@
     <div class="image-section"></div>
     <div class="form-section">
         <h1>Sign Up For An Account</h1>
-        <form id="signupForm" th:action="@{/users/register}" th:object="${user}" method="post">
-            <input type="text" id="name" th:field="*{name}" placeholder="Full Name" />
+        <form id="signupForm" th:action="@{/player/register}" th:object="${player}" method="post">
+            <input type="text" id="name" th:field="*{username}" placeholder="Username" />
             <div class="error-message" id="nameError">
-                Please enter your full name.
+                Please provide a username.
             </div>
             <input type="text" id="email" th:field="*{email}" placeholder="Email Address" />
             <div class="error-message" id="emailError">
@@ -26,42 +26,12 @@
                 Password must be at least 8 characters long and contain at least one
                 uppercase letter, one lowercase letter, and one digit.
             </div>
-            <select id="refer" th:field="*{refer}">
-                <option value="" disabled selected>
-                    How did you hear about us?
-                </option>
-                <option value="facebook">Facebook</option>
-                <option value="linkedin">Linkedin</option>
-                <option value="google">Google</option>
-            </select>
-            <div class="error-message" id="referError">
-                Please select how you heard about us.
-            </div>
-            <fieldset class="dining-space">
-                <legend>Preferred Contact Method</legend>
-                <label>
-                    <input type="radio" th:field="*{contact}" value="email" />
-                    Email
-                </label>
-                <label>
-                    <input type="radio" th:field="*{contact}" value="phone" />
-                    Phone
-                </label>
-            </fieldset>
-
-            <label>
-                <input type="checkbox" id="terms" th:field="*{terms}" />
-                I agree to the terms and conditions
-            </label>
-            <div class="error-message" id="termsError" style="margin-top: 15px">
-                You must agree to the terms and conditions.
-            </div>
 
             <button type="submit" class="book-btn">Register</button>
         </form>
-        <p>Already registered? <a th:href="@{/users/login}">Login here</a></p>
+        <p>Already registered? <a th:href="@{/player/login}">Login here</a></p>
     </div>
 </div>
-<script th:src="@{/js/register-validation.js}"></script>
+<script th:src="@{/js/validation.js}"></script>
 </body>
 </html>

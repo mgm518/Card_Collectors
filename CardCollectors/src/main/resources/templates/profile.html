@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+<div class="profile-container">
+  <h2>Welcome <span th:text="${player.getUsername}"></span></h2>
+
+  <a href="/">Back to Home</a>
+</div>
+</body>
+</html>
