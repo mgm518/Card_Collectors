@@ -1,36 +1,48 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign Up</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}" />
-
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up</title>
+  <link rel="stylesheet" th:href="@{/css/home.css}"/>
+  <link rel="stylesheet" th:href="@{/css/form.css}"/>
+  <style>
+    .error-message {
+      display: none;
+    }
+  </style>
 </head>
 <body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 <div class="container">
-    <div class="image-section"></div>
-    <div class="form-section">
-        <h1>Sign Up For An Account</h1>
-        <form id="signupForm" th:action="@{/player/register}" th:object="${player}" method="post">
-            <input type="text" id="name" th:field="*{username}" placeholder="Username" />
-            <div class="error-message" id="nameError">
-                Please provide a username.
-            </div>
-            <input type="text" id="email" th:field="*{email}" placeholder="Email Address" />
-            <div class="error-message" id="emailError">
-                Please enter a valid email address.
-            </div>
-            <input type="password" id="password" th:field="*{password}" placeholder="Password" />
-            <div class="error-message" id="passwordError">
-                Password must be at least 8 characters long and contain at least one
-                uppercase letter, one lowercase letter, and one digit.
-            </div>
-
-            <button type="submit" class="book-btn">Register</button>
-        </form>
-        <p>Already registered? <a th:href="@{/player/login}">Login here</a></p>
-    </div>
+  <div class="form-section">
+    <h1>Sign Up For An Account</h1>
+    <form id="form" th:action="@{/register}" th:object="${player}" method="post">
+      <div class="input-control">
+        <input type="text" id="name" th:field="*{username}" placeholder="Username"/>
+        <div class="error-message" id="nameError">
+          Please provide a username.
+        </div>
+      </div>
+      <div class="input-control">
+        <input type="text" id="email" th:field="*{email}" placeholder="Email Address"/>
+        <div class="error-message" id="emailError">
+          Please enter a valid email address.
+        </div>
+      </div>
+      <div class="input-control">
+        <input type="password" id="password" th:field="*{password}" placeholder="Password"/>
+        <div class="error-message" id="passwordError">
+          Password must be at least 8 characters long and contain at least one
+          uppercase letter, one lowercase letter, and one digit.
+        </div>
+      </div>
+      <button id="sub" type="submit" class="btn btn-primary">Register</button>
+      <a th:href="@{/login}">
+        <button id="register" type="button" class="btn btn-primary">Login</button>
+      </a>
+    </form>
+  </div>
 </div>
 <script th:src="@{/js/validation.js}"></script>
 </body>

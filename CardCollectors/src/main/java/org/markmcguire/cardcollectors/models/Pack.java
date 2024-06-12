@@ -1,12 +1,12 @@
 package org.markmcguire.cardcollectors.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import java.util.List;
+import jakarta.persistence.ManyToMany;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,10 +27,13 @@ public class Pack {
   Long id;
   String name;
   String description;
-  Integer size;
-  @OneToMany
-  List<Card> pool;
+  @Builder.Default
+  Integer size = 10;
+  @Builder.Default
+  Integer bonus = 0;
+  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  Set<Card> pool;
   // TODO implement logic for featured cards
-//  @OneToMany
-//  List<Card> featureCards;
+  //  @OneToMany
+  //  List<Card> featureCards;
 }

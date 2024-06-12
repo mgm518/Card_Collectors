@@ -1,10 +1,13 @@
 package org.markmcguire.cardcollectors.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -35,8 +38,14 @@ public class Player implements UserDetails {
   String username;
   String password;
   String email;
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<Role> roles;
+  Integer currency;
+  @OneToMany(cascade = CascadeType.ALL)
+  List<Pack> packs;
+  @OneToMany(cascade = CascadeType.ALL)
+  List<Card> collection;
+
 
   /**
    * Returns the authorities granted to the user. Cannot return <code>null</code>.
@@ -45,7 +54,7 @@ public class Player implements UserDetails {
    */
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+    return Collections.singletonList(new SimpleGrantedAuthority("USER"));
   }
 
   /**

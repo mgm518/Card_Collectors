@@ -23,19 +23,22 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(authorizeRequests ->
             authorizeRequests
-                .requestMatchers("/css/**", "/js/**", "/images/**", "/player/register", "/player/login").permitAll()
-                .anyRequest().hasRole("USER")
+                .requestMatchers("/css/**", "/js/**", "/images/**", "/register", "/login",
+                    "/api/**")
+                .permitAll()
+                .requestMatchers("/profile").hasAnyRole("USER")
+                .anyRequest().authenticated()
 
         )
         .formLogin(formLogin ->
             formLogin
-                .loginPage("/player/login")
-                .loginProcessingUrl("/player/login")
-                .defaultSuccessUrl("/player/profile", true)
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .successForwardUrl("/profile")
                 .permitAll()
         )
         .logout(logout -> logout
-            .logoutSuccessUrl("/player/login").permitAll()
+            .logoutSuccessUrl("/login").permitAll()
         )
         .userDetailsService(userDetailsService);
 

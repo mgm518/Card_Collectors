@@ -1,0 +1,83 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+:root {
+  --red-1: #fc355c;
+  --red-2: #dc0045;
+  --yellow-1: #ffd700;
+  --yellow-2: #d0af12;
+  --green-1: #50c878;
+  --green-2: #1aa260;
+
+  --beige-1: #e6d9cd;
+  --beige-2: #bcb1a7; 
+  --beige-3: #968E86;
+
+  --lapis-blue-l5: #e9f5ff;
+  --lapis-blue-l4: #b6ddff;
+  --lapis-blue-l3: #6cbaff;
+  --lapis-blue-l2: #2398ff;
+  --lapis-blue-l1: #0073d8;
+  --lapis-blue: #004b8d;
+  --lapis-blue-d1: #004581;
+  --lapis-blue-d2: #003d72;
+  --lapis-blue-d3: #003564;
+  --lapis-blue-d4: #002e56;
+  --lapis-blue-d5: #002647;
+
+  --theme-5: var(--lapis-blue-l5);
+  --theme-4: var(--lapis-blue-l4);
+  --theme-3: var(--lapis-blue-l3);
+  --theme-2: var(--lapis-blue-l2);
+  --theme-1: var(--lapis-blue-l1);
+  --theme-main: var(--lapis-blue);
+  --main-heading:var(--beige-1);
+  --text: var(--lapis-blue-d5);
+  --text-alt: var(--lapis-blue-l5);
+  --text-light: var(--lapis-blue-l5);
+  --text-dark: var(--lapis-blue-d5);
+  --box-shadow1: var(--lapis-blue-l3);
+  --box-shadow2: var(--lapis-blue-l4);
+  --linear-gradient-light: linear-gradient(#ffffff9f, #ffffff9f);
+  --linear-gradient-dark: linear-gradient(#0000007f, #0000007f);
+  --linear-gradient: var(--linear-gradient-light);
+
+  --form-theme-1: var(--beige-1);
+  --form-theme-2: var(--beige-2);
+  --form-theme-3: var(--beige-3);
+  --nav-back: var(--beige-1);
+
+  --error: var(--red-2);
+  --success: var(--green-1);
+  --rating1: var(--green-1);
+  --rating2: var(--yellow-1);
+  --rating3: var(--red-1);
+
+  --button-glow-1: var(--theme-3);
+  --button-glow-2: var(--theme-2);
+  --button-glow-3: var(--theme-1);
+  --input-background: white;
+  --input-border: #f0f0f0;
+}
+
+.dark {
+  --theme-5: var(--lapis-blue-d5);
+  --theme-4: var(--lapis-blue-d4);
+  --theme-3: var(--lapis-blue-d3);
+  --theme-2: var(--lapis-blue-d2);
+  --theme-1: var(--lapis-blue-d1);
+  --text: var(--lapis-blue-l5);
+  --text-alt: var(--lapis-blue-d5);
+  --nav-back: var(--beige-3);
+  --box-shadow1: var(--lapis-blue);
+  --box-shadow2: var(--lapis-blue-l2);
+  --linear-gradient: var(--linear-gradient-dark);
+  --error: var(--red-1);
+  --rating1: var(--green-2);
+  --rating2: var(--yellow-2);
+  --rating3: var(--red-2);
+  --form-theme-1: var(--beige-3);
+  --form-theme-2: var(--beige-2);
+  --form-theme-3: var(--beige-1);
+  --input-background: black;
+  --input-border: #7f7f7f;
+}
+

@@ -50,18 +50,14 @@ public class PlayerServiceImpl implements PlayerService {
   @Transactional
   public void savePlayer(Player user) {
     user.setPassword(passwordEncoder.encode(user.getPassword()));
-    Role userRole = roleRepository.findByName("ROLE_USER");
-    if (userRole == null) {
-      userRole = checkRoleExist("ROLE_USER");
-    }
+    Role userRole = checkRoleExist("ROLE_USER");
     user.setRoles(Arrays.asList(userRole));
     playerRepository.save(user);
   }
 
   private Role checkRoleExist(String roleName) {
-    Role role = new Role();
-    role.setName(roleName);
-    return roleRepository.save(role);
+    return roleRepository.findByName(roleName)
+        .orElseGet(() -> roleRepository.save(Role.builder().name(roleName).build()));
   }
 
   @Override
