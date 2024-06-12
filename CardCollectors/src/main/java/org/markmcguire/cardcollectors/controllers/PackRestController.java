@@ -2,8 +2,8 @@ package org.markmcguire.cardcollectors.controllers;
 
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.markmcguire.cardcollectors.models.Card;
-import org.markmcguire.cardcollectors.models.Pack;
+import org.markmcguire.cardcollectors.models.CardType;
+import org.markmcguire.cardcollectors.models.PackType;
 import org.markmcguire.cardcollectors.services.PackServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,25 +22,25 @@ public class PackRestController {
   private PackServiceImpl packService;
 
   @GetMapping("/all")
-  public List<Pack> getAllPacks() {
+  public List<PackType> getAllPacks() {
     log.debug("Fetching list of all packs");
     return packService.getAllPacks();
   }
 
   @PostMapping("/create")
-  public Pack createCard(@RequestBody Pack pack) {
-    log.debug("Creating Pack: {}", pack);
-    return packService.createPack(pack);
+  public PackType createPack(@RequestBody PackType packType) {
+    log.debug("Creating Pack: {}", packType);
+    return packService.createPackType(packType);
   }
 
   @PostMapping("/initiate")
-  public List<Pack> initiatePackDb() {
+  public List<PackType> initiatePackDb() {
     log.debug("Initializing Card Database");
     return packService.initializePackDb();
   }
 
   @PostMapping("/open/{name}")
-  public List<Card> openPack(@PathVariable String name) {
+  public List<CardType> openPack(@PathVariable String name) {
     log.debug("Opening Card Pack");
     return packService.openPack(name);
   }

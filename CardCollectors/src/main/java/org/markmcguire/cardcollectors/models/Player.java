@@ -6,8 +6,11 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -41,10 +44,33 @@ public class Player implements UserDetails {
   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<Role> roles;
   Integer currency;
-  @OneToMany(cascade = CascadeType.ALL)
-  List<Pack> packs;
-  @OneToMany(cascade = CascadeType.ALL)
-  List<Card> collection;
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
+  List<Pack> packs = new ArrayList<>();
+//  @ManyToMany @Builder.Default
+//  List<Card> collection = new ArrayList<>();
+
+  public void addPack(Pack pack) {
+    this.packs.add(pack);
+    pack.setUser(this);
+  }
+
+  public void removePack(Pack pack) {
+    this.packs.remove(pack);
+    pack.setUser(null);
+  }
+
+//  public void addCard(Card card) {
+//    this.collection.add(card);
+//  }
+//
+//  public void addCards(List<Card> cards) {
+//    this.collection.addAll(cards);
+//  }
+//
+//  public void removeCard(Card card) {
+//    this.collection.remove(card);
+//  }
 
 
   /**

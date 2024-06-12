@@ -2,6 +2,8 @@ package org.markmcguire.cardcollectors.services;
 
 import java.util.Arrays;
 import java.util.Optional;
+import org.markmcguire.cardcollectors.models.Pack;
+import org.markmcguire.cardcollectors.models.PackType;
 import org.markmcguire.cardcollectors.models.Player;
 import org.markmcguire.cardcollectors.models.Role;
 import org.markmcguire.cardcollectors.repositories.PlayerRepository;
@@ -48,11 +50,11 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   @Transactional
-  public void savePlayer(Player user) {
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
+  public void savePlayer(Player player) {
+    player.setPassword(passwordEncoder.encode(player.getPassword()));
     Role userRole = checkRoleExist("ROLE_USER");
-    user.setRoles(Arrays.asList(userRole));
-    playerRepository.save(user);
+    player.setRoles(Arrays.asList(userRole));
+    playerRepository.save(player);
   }
 
   private Role checkRoleExist(String roleName) {
@@ -75,5 +77,16 @@ public class PlayerServiceImpl implements PlayerService {
   @Override
   public Player findByEmail(String email) {
     return playerRepository.findByEmail(email);
+  }
+
+  /**
+   * @param player
+   * @param packType
+   */
+  @Override
+  @Transactional
+  public void purchasePack(Player player, PackType packType) {
+    player.addPack(Pack.builder().type(packType).build());
+    playerRepository.save(player);
   }
 }

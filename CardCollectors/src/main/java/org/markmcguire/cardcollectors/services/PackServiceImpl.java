@@ -3,9 +3,9 @@ package org.markmcguire.cardcollectors.services;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.markmcguire.cardcollectors.models.Card;
-import org.markmcguire.cardcollectors.models.Pack;
-import org.markmcguire.cardcollectors.repositories.PackRepository;
+import org.markmcguire.cardcollectors.models.CardType;
+import org.markmcguire.cardcollectors.models.PackType;
+import org.markmcguire.cardcollectors.repositories.PackTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,49 +16,49 @@ public class PackServiceImpl implements PackService {
 
   private final CardService cardService;
 
-  private final PackRepository packRepository;
+  private final PackTypeRepository packTypeRepository;
 
   @Autowired
-  public PackServiceImpl(CardService cardService, PackRepository packRepository) {
+  public PackServiceImpl(CardService cardService, PackTypeRepository packTypeRepository) {
     this.cardService = cardService;
-    this.packRepository = packRepository;
+    this.packTypeRepository = packTypeRepository;
   }
 
   /**
    * @return
    */
   @Override
-  public List<Pack> getAllPacks() {
+  public List<PackType> getAllPacks() {
     return List.of();
   }
 
   /**
-   * @param pack
+   * @param packType
    * @return
    */
   @Override
-  public Pack createPack(Pack pack) {
-    return packRepository.save(Pack.builder()
-        .name(pack.getName()).description(pack.getDescription())
-        .size(pack.getSize()).bonus(pack.getBonus())
-        .pool(Optional.ofNullable(pack.getPool())
+  public PackType createPackType(PackType packType) {
+    return packTypeRepository.save(PackType.builder()
+        .name(packType.getName()).description(packType.getDescription())
+        .size(packType.getSize()).bonus(packType.getBonus())
+        .pool(Optional.ofNullable(packType.getPool())
             .orElse(cardService.getAllCards())).build());
   }
 
   @Transactional
-  public List<Pack> initializePackDb() {
-    packRepository.deleteAll();
-    packRepository.save(Pack.builder()
+  public List<PackType> initializePackDb() {
+    packTypeRepository.deleteAll();
+    packTypeRepository.save(PackType.builder()
         .name("Standard")
         .description("A standard card pack")
         .pool(cardService.getAllCards())
         .build());
-    packRepository.save(Pack.builder()
+    packTypeRepository.save(PackType.builder()
         .name("Limited")
         .description("A limited card pack.  There's a here probability of pulling an SSR card")
         .pool(cardService.getAllCards()).bonus(5)
         .build());
-    return packRepository.findAll();
+    return packTypeRepository.findAll();
   }
 
   /**
@@ -66,21 +66,13 @@ public class PackServiceImpl implements PackService {
    * @return
    */
   @Override
-  public Pack getPack(String name) {
-    return packRepository.findByName(name);
+  public PackType getPackType(String name) {
+    return packTypeRepository.findByName(name);
   }
 
-  public List<Card> openPack(String name) {
-    return Optional.ofNullable(packRepository.findByName(name))
+  public List<CardType> openPack(String name) {
+    return Optional.ofNullable(getPackType(name))
         .map(cardService::openCardPack)
         .orElse(List.of());
-  }
-
-  /**
-   * @return
-   */
-  @Override
-  public List<Card> openPack(Pack pack) {
-    return cardService.openCardPack(pack);
   }
 }

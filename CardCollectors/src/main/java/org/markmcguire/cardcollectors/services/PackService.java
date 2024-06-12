@@ -1,18 +1,18 @@
 package org.markmcguire.cardcollectors.services;
 
 import java.util.List;
-import org.markmcguire.cardcollectors.models.Card;
-import org.markmcguire.cardcollectors.models.Pack;
+import org.markmcguire.cardcollectors.models.CardType;
+import org.markmcguire.cardcollectors.models.PackType;
 
 public interface PackService {
 
-  List<Pack> getAllPacks();
+  List<PackType> getAllPacks();
 
-  Pack createPack(Pack pack);
+  PackType createPackType(PackType packType);
 
-  Pack getPack(String name);
+  PackType getPackType(String name);
 
-  List<Card> openPack(Pack pack);
+//  List<CardType> openPack(PackType packType);
 
 
 }

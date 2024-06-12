@@ -3,7 +3,7 @@ package org.markmcguire.cardcollectors.controllers;
 import java.util.List;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
-import org.markmcguire.cardcollectors.models.Card;
+import org.markmcguire.cardcollectors.models.CardType;
 import org.markmcguire.cardcollectors.models.Rarity;
 import org.markmcguire.cardcollectors.services.CardServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,38 +26,38 @@ public class CardRestController {
   }
 
   @GetMapping("/all")
-  public Set<Card> getAllCards() {
+  public Set<CardType> getAllCards() {
     log.debug("Fetching list of all cards");
     return cardService.getAllCards();
   }
 
   @PostMapping("/create")
-  public Card createCard(@RequestBody Card card) {
-    log.debug("Creating card: {}", card);
-    return cardService.createCard(card);
+  public CardType createCard(@RequestBody CardType cardType) {
+    log.debug("Creating card: {}", cardType);
+    return cardService.createCardType(cardType);
   }
 
   @PostMapping("/createTestCard")
-  public Card createTestCard() {
-    Card test = Card.builder().name("Tester").rarity(Rarity.SSR).build();
+  public CardType createTestCard() {
+    CardType test = CardType.builder().name("Tester").rarity(Rarity.SSR).build();
     log.debug("Generated Test Card: {}", test);
-    return cardService.createCard(test);
+    return cardService.createCardType(test);
   }
 
   @PostMapping("/initiate")
-  public List<Card> createCard() {
+  public List<CardType> initiateDb() {
     log.debug("Initializing Card Database");
     return cardService.initializeCardDb();
   }
 
   @GetMapping("/draw")
-  public Card drawStandardCard() {
+  public CardType drawStandardCard() {
     log.debug("Standard Gacha Pull");
     return cardService.gachaStandardPull();
   }
 
   @GetMapping("/drawLimited")
-  public Card drawLimitedCard() {
+  public CardType drawLimitedCard() {
     log.debug("Limited Gacha Pull");
     return cardService.gachaLimitedPull();
   }

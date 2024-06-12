@@ -2,12 +2,12 @@ package org.markmcguire.cardcollectors.services;
 
 import java.util.List;
 import java.util.Set;
-import org.markmcguire.cardcollectors.models.Card;
-import org.markmcguire.cardcollectors.models.Pack;
+import org.markmcguire.cardcollectors.models.CardType;
+import org.markmcguire.cardcollectors.models.PackType;
 
 public interface CardService {
 
-  Set<Card> getAllCards();
+  Set<CardType> getAllCards();
 
   /**
    * This simulates a standard pull.  No bonuses should ever be applied to the rarities and
@@ -15,7 +15,7 @@ public interface CardService {
    *
    * @return The result of the gacha pull
    */
-  Card gachaStandardPull();
+  CardType gachaStandardPull();
 
   /**
    * This simulates a limited-time pull.  Bonus rates are applied so higher rarities are more likely
@@ -24,13 +24,13 @@ public interface CardService {
    *
    * @return The result of the gacha pull
    */
-  Card gachaLimitedPull();
+  CardType gachaLimitedPull();
 
   /**
    * This simulates opening the given card pack.
    *
-   * @param pack The selected card park
+   * @param packType The selected card park
    * @return The list of cards selected from the pool of cards the pack has access to.
    */
-  List<Card> openCardPack(Pack pack);
+  List<CardType> openCardPack(PackType packType);
 }

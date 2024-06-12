@@ -1,11 +1,11 @@
 package org.markmcguire.cardcollectors.repositories;
 
-import org.markmcguire.cardcollectors.models.Pack;
+import org.markmcguire.cardcollectors.models.PackType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PackRepository extends JpaRepository<Pack, Long> {
+public interface PackTypeRepository extends JpaRepository<PackType, Long> {
 
-  Pack findByName(String name);
+  PackType findByName(String name);
 }

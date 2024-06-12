@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.extern.slf4j.Slf4j;
-import org.markmcguire.cardcollectors.models.Card;
-import org.markmcguire.cardcollectors.models.Pack;
+import org.markmcguire.cardcollectors.models.CardType;
+import org.markmcguire.cardcollectors.models.PackType;
 import org.markmcguire.cardcollectors.models.Rarity;
-import org.markmcguire.cardcollectors.repositories.CardRepository;
+import org.markmcguire.cardcollectors.repositories.CardTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,21 +17,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CardServiceImpl implements CardService {
 
-  private final CardRepository cardRepository;
+  private final CardTypeRepository cardTypeRepository;
 
   @Autowired
-  public CardServiceImpl(CardRepository cardRepository) {
-    this.cardRepository = cardRepository;
+  public CardServiceImpl(CardTypeRepository cardTypeRepository) {
+    this.cardTypeRepository = cardTypeRepository;
   }
 
   @Transactional
-  public Card createCard(Card card) {
-    return cardRepository.save(card);
+  public CardType createCardType(CardType cardType) {
+    return cardTypeRepository.save(cardType);
   }
 
   @Override
-  public Set<Card> getAllCards() {
-    return Set.copyOf(cardRepository.findAll());
+  public Set<CardType> getAllCards() {
+    return Set.copyOf(cardTypeRepository.findAll());
   }
 
   /**
@@ -41,11 +41,11 @@ public class CardServiceImpl implements CardService {
    * @return
    */
   @Override
-  public Card gachaStandardPull() {
+  public CardType gachaStandardPull() {
     Rarity pick = pickRarity(0);
     log.debug("standard rarity pick: {}", pick);
-    List<Card> cardList = getAllCardsByRarity(pick);
-    return cardList.get(ThreadLocalRandom.current().nextInt(cardList.size()));
+    List<CardType> cardTypeList = getAllCardsByRarity(pick);
+    return cardTypeList.get(ThreadLocalRandom.current().nextInt(cardTypeList.size()));
   }
 
   /**
@@ -56,26 +56,26 @@ public class CardServiceImpl implements CardService {
    * @return
    */
   @Override
-  public Card gachaLimitedPull() {
+  public CardType gachaLimitedPull() {
     Rarity pick = pickRarity(5);
     log.debug("limited rarity pick: {}", pick);
-    List<Card> cardList = getAllCardsByRarity(pick);
-    return cardList.get(ThreadLocalRandom.current().nextInt(cardList.size()));
+    List<CardType> cardTypeList = getAllCardsByRarity(pick);
+    return cardTypeList.get(ThreadLocalRandom.current().nextInt(cardTypeList.size()));
   }
 
   /**
    * This simulates opening the given card pack.
    *
-   * @param pack The selected card park
+   * @param packType The selected card park
    * @return The list of cards selected from the pool of cards the pack has access to.
    */
   // TODO implement logic for featured cards
   @Override
-  public List<Card> openCardPack(Pack pack) {
-    List<Card> pulls = new ArrayList<>();
-    for (int i = 0; i < pack.getSize(); i++) {
-      Rarity pick = pickRarity((i == 0) ? 5 + pack.getBonus() : pack.getBonus());
-      List<Card> filtered = pack.getPool().stream()
+  public List<CardType> openCardPack(PackType packType) {
+    List<CardType> pulls = new ArrayList<>();
+    for (int i = 0; i < packType.getSize(); i++) {
+      Rarity pick = pickRarity((i == 0) ? 5 + packType.getBonus() : packType.getBonus());
+      List<CardType> filtered = packType.getPool().stream()
           .filter(card -> card.getRarity().equals(pick))
           .toList();
       pulls.add(filtered.get(ThreadLocalRandom.current().nextInt(filtered.size())));
@@ -84,32 +84,32 @@ public class CardServiceImpl implements CardService {
   }
 
   @Transactional
-  public List<Card> initializeCardDb() {
-    cardRepository.deleteAll();
-    List<Card> cardList = new ArrayList<>();
+  public List<CardType> initializeCardDb() {
+    cardTypeRepository.deleteAll();
+    List<CardType> cardTypeList = new ArrayList<>();
     for (int i = 0; i < 20; i++) {
-      cardList.add(Card.builder()
+      cardTypeList.add(CardType.builder()
           .name("SSR Unit #" + i)
           .rarity(Rarity.SSR)
           .build());
     }
     for (int i = 0; i < 10; i++) {
-      cardList.add(Card.builder()
+      cardTypeList.add(CardType.builder()
           .name("SR Unit #" + i)
           .rarity(Rarity.SR)
           .build());
     }
     for (int i = 0; i < 10; i++) {
-      cardList.add(Card.builder()
+      cardTypeList.add(CardType.builder()
           .name("R Unit #" + i)
           .rarity(Rarity.R)
           .build());
     }
-    return cardRepository.saveAll(cardList);
+    return cardTypeRepository.saveAll(cardTypeList);
   }
 
-  private List<Card> getAllCardsByRarity(Rarity rarity) {
-    return cardRepository.findCardsByRarity(rarity);
+  private List<CardType> getAllCardsByRarity(Rarity rarity) {
+    return cardTypeRepository.findCardsByRarity(rarity);
   }
 
   /**
