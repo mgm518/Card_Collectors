@@ -5,9 +5,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.extern.slf4j.Slf4j;
+import org.markmcguire.cardcollectors.models.Card;
 import org.markmcguire.cardcollectors.models.CardType;
 import org.markmcguire.cardcollectors.models.PackType;
+import org.markmcguire.cardcollectors.models.Player;
 import org.markmcguire.cardcollectors.models.Rarity;
+import org.markmcguire.cardcollectors.repositories.CardRepository;
 import org.markmcguire.cardcollectors.repositories.CardTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,17 +21,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class CardServiceImpl implements CardService {
 
   private final CardTypeRepository cardTypeRepository;
+  private final CardRepository cardRepository;
 
   @Autowired
-  public CardServiceImpl(CardTypeRepository cardTypeRepository) {
+  public CardServiceImpl(CardTypeRepository cardTypeRepository, CardRepository cardRepository) {
     this.cardTypeRepository = cardTypeRepository;
+    this.cardRepository = cardRepository;
   }
 
-  @Transactional
-  public CardType createCardType(CardType cardType) {
-    return cardTypeRepository.save(cardType);
-  }
-
+  /**
+   * @return The set of all {@link CardType}s in the database
+   */
   @Override
   public Set<CardType> getAllCards() {
     return Set.copyOf(cardTypeRepository.findAll());
@@ -40,7 +43,6 @@ public class CardServiceImpl implements CardService {
    *
    * @return
    */
-  @Override
   public CardType gachaStandardPull() {
     Rarity pick = pickRarity(0);
     log.debug("standard rarity pick: {}", pick);
@@ -55,7 +57,6 @@ public class CardServiceImpl implements CardService {
    *
    * @return
    */
-  @Override
   public CardType gachaLimitedPull() {
     Rarity pick = pickRarity(5);
     log.debug("limited rarity pick: {}", pick);
@@ -83,6 +84,21 @@ public class CardServiceImpl implements CardService {
     return pulls;
   }
 
+  /**
+   * @param id
+   * @return
+   */
+  @Override
+  public Card getCard(Long id) {
+    return cardRepository.findById(id).orElse(null);
+  }
+
+  /*
+  Below are service methods that are exposed via REST API.
+  Their purpose is to either simulate functionality or initialize the DB.
+  They are not intended to be used by the regular @Controller
+   */
+
   @Transactional
   public List<CardType> initializeCardDb() {
     cardTypeRepository.deleteAll();
@@ -106,6 +122,11 @@ public class CardServiceImpl implements CardService {
           .build());
     }
     return cardTypeRepository.saveAll(cardTypeList);
+  }
+
+  @Transactional
+  public CardType createCardType(CardType cardType) {
+    return cardTypeRepository.save(cardType);
   }
 
   private List<CardType> getAllCardsByRarity(Rarity rarity) {

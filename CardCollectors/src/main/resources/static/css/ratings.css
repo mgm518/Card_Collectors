@@ -1,0 +1,27 @@
+@import url(theme.css);
+.rating1 {
+  background: var(--rating1);
+  color: var(--text);
+}
+
+.rating1-text {
+  color: var(--rating1);
+}
+
+.rating2 {
+  background: var(--rating2);
+  color: var(--text);
+}
+
+.rating2-text {
+  color: var(--rating2);
+}
+
+.rating3 {
+  background: var(--rating3);
+  color: var(--text);
+}
+
+.rating3-text {
+  color: var(--rating3);
+}

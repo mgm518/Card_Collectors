@@ -1,6 +1,9 @@
 package org.markmcguire.cardcollectors.controllers;
 
+import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.markmcguire.cardcollectors.models.Card;
 import org.markmcguire.cardcollectors.models.PackType;
 import org.markmcguire.cardcollectors.models.Player;
 import org.markmcguire.cardcollectors.services.PackService;
@@ -28,27 +31,29 @@ public class PackController {
     this.packService = packService;
   }
 
-//  @GetMapping("/")
-//  public String index(Model model, Authentication auth) {
-//    String email = auth.getName();
-//    Player player = playerService.findByEmail(email);
-//    model.addAttribute("player", player);
-//    model.addAttribute("packs", packService.getAllPacks());
-//    return "purchase";
-//  }
-
   @GetMapping("/addPack/{name}")
-  public String purchaseSelection(@PathVariable String name, Authentication auth) {
+  public String purchaseSelectedPack(@PathVariable String name, Authentication auth) {
     Player player = playerService.findByEmail(auth.getName());
     PackType packType = packService.getPackType(name);
-    playerService.purchasePack(player, packType);
+    log.debug("Attempting to add pack {} to player {}", packType, player);
+    if (player.getCurrency() >= packType.getCost()) {
+      playerService.purchasePack(player, packType);
+    } // else provide an error saying player can't purchase; Or disable the buttons on front-end
     return "redirect:/profile";
   }
 
-//  @GetMapping("/openPack/{id}")
-//  public String purchaseSelection(@PathVariable Long id, Authentication auth) {
-//    Player player = playerService.findByEmail(auth.getName());
-//    player.getPacks().
-//    return "redirect:/profile";
-//  }
+  @GetMapping("/openPack/{id}")
+  public String openSelectedPack(@PathVariable Long id, Authentication auth) {
+    Player player = playerService.findByEmail(auth.getName());
+    Optional.ofNullable(packService.getPack(id))
+        .ifPresent(pack -> {
+          // Step 1: openPack -> List<Card> cards { packService }
+          List<Card> cards = packService.openPack(pack);
+          // Step 2: update player (add cards to collection, remove pack)
+          log.debug("Updating the player {} to add cardList {} and remove pack {}",
+              player, cards, pack);
+          playerService.updatePlayer(player, pack, cards);
+        });
+    return "redirect:/profile";
+  }
 }

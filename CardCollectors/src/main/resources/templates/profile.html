@@ -10,22 +10,11 @@
 <div class="profile-container">
   <h2>Welcome <span th:text="${player.getUsername}"></span></h2>
   <div>Current Balance: <span th:text="${player.getCurrency()}"></span></div>
-  <div class="container">
-    <h3>Packs</h3> <a th:href="@{/packs/addPack/1}"><button>Purchase Standard</button></a>
-    <a th:href="@{/packs/addPack/limited}"><button>Purchase Limited</button></a>
-    <table>
-      <tr th:each="pack : ${player.getPacks()}" class="packType-list">
-        <td th:text="${pack.getType().getName()}"></td>
-        <td th:text="${pack.getType().getDescription()}"></td>
-        <td>
-          <a>
-<!--          <a th:href="@{/openPack/{id}(id=${pack.getId()})}">-->
-            <button>Open</button>
-          </a>
-        </td>
-      </tr>
-    </table>
-  </div>
+  <a th:href="@{/3000}">
+    <button>Add Currency</button>
+  </a>
+  <div th:replace="~{fragments/packs :: packsHeld}"></div>
+  <div th:replace="~{fragments/collection :: collection}"></div>
 </div>
 </body>
 </html>

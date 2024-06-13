@@ -1,7 +1,9 @@
 package org.markmcguire.cardcollectors.services;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import org.markmcguire.cardcollectors.models.Card;
 import org.markmcguire.cardcollectors.models.Pack;
 import org.markmcguire.cardcollectors.models.PackType;
 import org.markmcguire.cardcollectors.models.Player;
@@ -19,13 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class PlayerServiceImpl implements PlayerService {
 
   private final PlayerRepository playerRepository;
-
   private final RoleRepository roleRepository;
-
   private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public PlayerServiceImpl(PlayerRepository playerRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+  public PlayerServiceImpl(PlayerRepository playerRepository, RoleRepository roleRepository,
+      PasswordEncoder passwordEncoder) {
     this.playerRepository = playerRepository;
     this.roleRepository = roleRepository;
     this.passwordEncoder = passwordEncoder;
@@ -87,6 +88,43 @@ public class PlayerServiceImpl implements PlayerService {
   @Transactional
   public void purchasePack(Player player, PackType packType) {
     player.addPack(Pack.builder().type(packType).build());
+    player.setCurrency(player.getCurrency() - packType.getCost());
+    playerRepository.save(player);
+  }
+
+  /**
+   * @param player
+   * @param amount
+   */
+  @Override
+  @Transactional
+  public void purchaseCurrency(Player player, Integer amount) {
+    player.setCurrency(player.getCurrency() + amount);
+    playerRepository.save(player);
+  }
+
+  /**
+   * @param player
+   * @param pack
+   * @param cardList
+   */
+  @Override
+  @Transactional
+  public void updatePlayer(Player player, Pack pack, List<Card> cardList) {
+    // TODO implement adding cardList to player's collection
+    player.addCards(cardList);
+    player.removePack(pack);
+    playerRepository.save(player);
+  }
+
+  /**
+   * @param player
+   * @param card
+   */
+  @Override
+  @Transactional
+  public void discardCard(Player player, Card card) {
+    player.removeCard(card);
     playerRepository.save(player);
   }
 }

@@ -1,17 +1,18 @@
 package org.markmcguire.cardcollectors.models;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import java.util.Set;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 @Data
@@ -20,22 +21,16 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PackType {
+public class Card {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   Long id;
-  String name;
-  String description;
-  @Builder.Default
-  Integer cost = 3000;
-  @Builder.Default
-  Integer size = 10;
-  @Builder.Default
-  Integer bonus = 0;
-  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  Set<CardType> pool;
-  // TODO implement logic for featured cards
-  //  @OneToMany
-  //  List<Card> featureCards;
+  @ManyToOne
+  CardType type;
+  @ManyToOne
+  @JoinColumn(name = "player_id")
+  @ToString.Exclude
+  @EqualsAndHashCode.Exclude
+  Player user;
 }

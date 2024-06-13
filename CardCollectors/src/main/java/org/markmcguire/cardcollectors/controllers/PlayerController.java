@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -67,5 +68,13 @@ public class PlayerController {
     if(player == null) { return "redirect:/login"; }
     model.addAttribute("player", player);
     return "profile";
+  }
+
+  @GetMapping("/{amount}")
+  public String addCurrency(@PathVariable Integer amount, Authentication auth) {
+    Player player = playerService.findByEmail(auth.getName());
+    if(player == null) { return "redirect:/login"; }
+    playerService.purchaseCurrency(player, amount);
+    return "redirect:/profile";
   }
 }

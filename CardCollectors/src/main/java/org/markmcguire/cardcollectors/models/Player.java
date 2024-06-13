@@ -6,8 +6,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
@@ -31,10 +29,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-/**
- * This represents the typical user within the system.
- */
+
 public class Player implements UserDetails {
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   Long id;
@@ -47,8 +44,9 @@ public class Player implements UserDetails {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   @Builder.Default
   List<Pack> packs = new ArrayList<>();
-//  @ManyToMany @Builder.Default
-//  List<Card> collection = new ArrayList<>();
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
+  List<Card> collection = new ArrayList<>();
 
   public void addPack(Pack pack) {
     this.packs.add(pack);
@@ -60,17 +58,19 @@ public class Player implements UserDetails {
     pack.setUser(null);
   }
 
-//  public void addCard(Card card) {
-//    this.collection.add(card);
-//  }
-//
-//  public void addCards(List<Card> cards) {
-//    this.collection.addAll(cards);
-//  }
-//
-//  public void removeCard(Card card) {
-//    this.collection.remove(card);
-//  }
+  public void addCard(Card card) {
+    this.collection.add(card);
+    card.setUser(this);
+  }
+
+  public void addCards(List<Card> cards) {
+    cards.forEach(this::addCard);
+  }
+
+  public void removeCard(Card card) {
+    this.collection.remove(card);
+    card.setUser(null);
+  }
 
 
   /**

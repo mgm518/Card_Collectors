@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Packs Fragment</title>
+</head>
+<body>
+<div th:fragment="packsHeld" class="container">
+  <h3>Packs</h3>
+  <a th:href="@{/packs/addPack/standard}">
+    <button>Purchase Standard</button>
+  </a>
+  <a th:href="@{/packs/addPack/limited}">
+    <button>Purchase Limited</button>
+  </a>
+  <table>
+    <thead>
+    <tr>
+      <th>Pack Name</th>
+      <th>Description</th>
+      <th>Price</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tr th:each="pack : ${player.getPacks()}" class="packType-list">
+      <td th:text="${pack.getType().getName()}"></td>
+      <td th:text="${pack.getType().getDescription()}"></td>
+      <td th:text="${pack.getType().getCost()}"></td>
+      <td>
+        <a th:href="@{/packs/openPack/{id}(id=${pack.getId()})}">
+          <button>Open</button>
+        </a>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>

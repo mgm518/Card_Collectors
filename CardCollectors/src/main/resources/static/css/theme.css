@@ -47,8 +47,8 @@
 
   --error: var(--red-2);
   --success: var(--green-1);
-  --rating1: var(--green-1);
-  --rating2: var(--yellow-1);
+  --rating1: var(--yellow-2);
+  --rating2: var(--green-1);
   --rating3: var(--red-1);
 
   --button-glow-1: var(--theme-3);
@@ -71,8 +71,8 @@
   --box-shadow2: var(--lapis-blue-l2);
   --linear-gradient: var(--linear-gradient-dark);
   --error: var(--red-1);
-  --rating1: var(--green-2);
-  --rating2: var(--yellow-2);
+  --rating1: var(--yellow-1);
+  --rating2: var(--green-2);
   --rating3: var(--red-2);
   --form-theme-1: var(--beige-3);
   --form-theme-2: var(--beige-2);
