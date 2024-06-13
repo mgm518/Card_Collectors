@@ -1,4 +1,4 @@
-document.getElementById("signupForm").addEventListener("submit",
+document.getElementById("form").addEventListener("submit",
     function (event) {
       event.preventDefault(); // Prevent the form from submitting
 

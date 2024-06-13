@@ -65,7 +65,9 @@ public class PlayerController {
   public String showProfile(Model model, Authentication authentication) {
     String email = authentication.getName();
     Player player = playerService.findByEmail(email);
-    if(player == null) { return "redirect:/login"; }
+    if (player == null) {
+      return "redirect:/login";
+    }
     model.addAttribute("player", player);
     return "profile";
   }
@@ -73,7 +75,9 @@ public class PlayerController {
   @GetMapping("/{amount}")
   public String addCurrency(@PathVariable Integer amount, Authentication auth) {
     Player player = playerService.findByEmail(auth.getName());
-    if(player == null) { return "redirect:/login"; }
+    if (player == null) {
+      return "redirect:/login";
+    }
     playerService.purchaseCurrency(player, amount);
     return "redirect:/profile";
   }

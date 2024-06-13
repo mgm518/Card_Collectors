@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PackController {
 
   private final PlayerService playerService;
-
   private final PackService packService;
 
   @Autowired
@@ -47,12 +46,10 @@ public class PackController {
     Player player = playerService.findByEmail(auth.getName());
     Optional.ofNullable(packService.getPack(id))
         .ifPresent(pack -> {
-          // Step 1: openPack -> List<Card> cards { packService }
           List<Card> cards = packService.openPack(pack);
-          // Step 2: update player (add cards to collection, remove pack)
           log.debug("Updating the player {} to add cardList {} and remove pack {}",
               player, cards, pack);
-          playerService.updatePlayer(player, pack, cards);
+          playerService.addCardsToPlayerCollection(player, pack, cards);
         });
     return "redirect:/profile";
   }

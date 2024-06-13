@@ -1,6 +1,7 @@
 package org.markmcguire.cardcollectors.services;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.markmcguire.cardcollectors.models.Card;
@@ -11,6 +12,7 @@ import org.markmcguire.cardcollectors.models.Role;
 import org.markmcguire.cardcollectors.repositories.PlayerRepository;
 import org.markmcguire.cardcollectors.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,21 +34,28 @@ public class PlayerServiceImpl implements PlayerService {
     this.passwordEncoder = passwordEncoder;
   }
 
-
   /**
    * Locates the user based on the username. In the actual implementation, the search may possibly
    * be case sensitive, or case insensitive depending on how the implementation instance is
    * configured. In this case, the <code>UserDetails</code> object that comes back may have a
    * username that is of a different case than what was actually requested..
    *
-   * @param username the username identifying the user whose data is required.
+   * @param email the username identifying the user whose data is required.
    * @return a fully populated user record (never <code>null</code>)
    * @throws UsernameNotFoundException if the user could not be found or the user has no
    *                                   GrantedAuthority
    */
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    return null;
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    Player user = playerRepository.findByEmail(email);
+    if (user == null) {
+      throw new UsernameNotFoundException("User not found with email: " + email);
+    }
+    return new org.springframework.security.core.userdetails.User(
+        user.getEmail(),
+        user.getPassword(),
+        Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+    );
   }
 
   @Override
@@ -81,8 +90,11 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   /**
-   * @param player
-   * @param packType
+   * This function will act as a simple transaction wherein the player purchases a {@link Pack}.
+   * That player's currency is deducted based on the {@link PackType}'s cost.
+   *
+   * @param player   The user currently logged in.
+   * @param packType The pack type being purchased.
    */
   @Override
   @Transactional
@@ -93,8 +105,11 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   /**
-   * @param player
-   * @param amount
+   * This function will act as a simple transaction wherein the player purchases in-system
+   * currency.
+   *
+   * @param player The user currently logged in.
+   * @param amount The amount to add
    */
   @Override
   @Transactional
@@ -104,13 +119,17 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   /**
-   * @param player
-   * @param pack
-   * @param cardList
+   * Stimulates the opening of a pack of cards.  The list of {@link Card}'s is added to the
+   * {@link Player}'s collection, and the opened {@link Pack} is removed from the player's
+   * inventory.
+   *
+   * @param player   The user currently logged in.
+   * @param pack     The pack being opened
+   * @param cardList The list of cards obtained from the pack
    */
   @Override
   @Transactional
-  public void updatePlayer(Player player, Pack pack, List<Card> cardList) {
+  public void addCardsToPlayerCollection(Player player, Pack pack, List<Card> cardList) {
     // TODO implement adding cardList to player's collection
     player.addCards(cardList);
     player.removePack(pack);
@@ -118,8 +137,10 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   /**
-   * @param player
-   * @param card
+   * The {@link Player} removes a {@link Card} from the collection
+   *
+   * @param player The user currently logged in.
+   * @param card   The card to be discarded.
    */
   @Override
   @Transactional

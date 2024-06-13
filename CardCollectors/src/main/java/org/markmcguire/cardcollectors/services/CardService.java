@@ -5,13 +5,9 @@ import java.util.Set;
 import org.markmcguire.cardcollectors.models.Card;
 import org.markmcguire.cardcollectors.models.CardType;
 import org.markmcguire.cardcollectors.models.PackType;
-import org.markmcguire.cardcollectors.models.Player;
 
 public interface CardService {
 
-  /**
-   * @return The set of all {@link CardType}s in the database
-   */
   Set<CardType> getAllCards();
 
   /**
@@ -26,8 +22,7 @@ public interface CardService {
    * This simulates a limited-time pull.  Bonus rates are applied so higher rarities are more likely
    * to emerge.
    * </p>
-   * Something that can be expanded upon is applying a "featured" bonus for
-   * individual cards.
+   * Something that can be expanded upon is applying a "featured" bonus for individual cards.
    *
    * @return The result of the gacha pull
    */
@@ -41,10 +36,6 @@ public interface CardService {
    */
   List<CardType> openCardPack(PackType packType);
 
-  /**
-   * @param id
-   * @return {@link Card}
-   */
   Card getCard(Long id);
 
 }

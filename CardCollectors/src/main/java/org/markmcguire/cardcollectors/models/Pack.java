@@ -5,12 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,6 +30,7 @@ public class Pack {
   PackType type;
   @ManyToOne
   @JoinColumn(name = "player_id")
-  @ToString.Exclude @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  @EqualsAndHashCode.Exclude
   Player user;
 }

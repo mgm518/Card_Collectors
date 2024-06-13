@@ -1,6 +1,7 @@
 package org.markmcguire.cardcollectors.models;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -17,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -37,6 +39,8 @@ public class Player implements UserDetails {
   Long id;
   String username;
   String password;
+  @NonNull
+  @Column(nullable = false, unique = true)
   String email;
   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<Role> roles;

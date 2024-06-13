@@ -30,8 +30,12 @@ public class PackServiceImpl implements PackService {
   }
 
   /**
-   * @param packType
-   * @return
+   * Creates a {@link PackType} and saves it to the repository.  Should the {@code packType} not
+   * have a pool of {@link CardType} already set, then it will be set to the list of
+   * {@code CardTypes} already in the database.
+   *
+   * @param packType {@link PackType} being created.
+   * @return the resulting {@link PackType} stored in the database.
    */
   @Override
   public PackType createPackType(PackType packType) {
@@ -42,35 +46,36 @@ public class PackServiceImpl implements PackService {
             .build());
   }
 
-  /**
-   * @param name
-   * @return
-   */
   @Override
   public PackType getPackType(String name) {
     return packTypeRepository.findByName(name);
   }
 
-  /**
-   * @param id
-   * @return
-   */
   @Override
   public Pack getPack(Long id) {
     return packRepository.findById(id).orElse(null);
   }
 
   /**
-   * @param pack
-   * @return
+   * Takes the {@code pack} and calls {@link CardService#openCardPack(PackType)} to generate the
+   * random list of {@link CardType}.  They are converted to {@link Card} so the
+   * {@link org.markmcguire.cardcollectors.models.Player} can store them.
+   *
+   * @param pack The selected Pack being opened
+   * @return The resulting Cards from the gacha generation.
    */
   @Override
   public List<Card> openPack(Pack pack) {
-    // TODO implement return cardService.openCardPack(pack.getType());
     return cardService.openCardPack(pack.getType()).stream()
         .map(cardType -> Card.builder().type(cardType).build())
         .toList();
   }
+
+  /*
+  Below are service methods that are exposed via REST API.
+  Their purpose is to either simulate functionality or initialize the DB.
+  They are not intended to be used by the regular @Controller
+   */
 
   @Transactional
   public List<PackType> initializePackDb() {
@@ -83,22 +88,19 @@ public class PackServiceImpl implements PackService {
     return packTypeRepository.findAll();
   }
 
-  /*
-  Below are service methods that are exposed via REST API.
-  Their purpose is to either simulate functionality or initialize the DB.
-  They are not intended to be used by the regular @Controller
-   */
-
   /**
    * @return List of every {@link CardType} in the database.
    */
   public List<PackType> getAllPacks() {
     return packTypeRepository.findAll();
   }
+
   /**
    * Simulates opening a {@link PackType} based on the pack's name
+   *
    * @param name The name of the pack to find.
-   * @return The list {@link CardType} drawn from {@link CardService#openCardPack(PackType)}.  Will be an empty List if {@code name} is invalid.
+   * @return The list {@link CardType} drawn from {@link CardService#openCardPack(PackType)}.  Will
+   * be an empty List if {@code name} is invalid.
    */
   public List<CardType> openPack(String name) {
     return Optional.ofNullable(getPackType(name))
